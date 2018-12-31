@@ -1,10 +1,10 @@
 package com.github.pozo.configuration
 
-class ApiConfiguration(var baseUrl: String, var version: String, var token: String) {
+class ApiConfiguration(private val baseUrl: String, private val version: String, var token: String) {
 
-    var endpoints: Endpoints = Endpoints(this)
+    val endpoints: Endpoints = Endpoints(this)
 
-    var headers: Headers = Headers(this)
+    val headers: Headers = Headers(this)
 
     fun getUrlWithVersion(): String {
         return "$baseUrl/$version"
