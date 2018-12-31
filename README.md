@@ -14,6 +14,8 @@ First of all you have to [grab a user token](https://api-docs.transferwise.com/#
 
  - Writing tests
  - Providing async api
+ - Error handling
+ - Logging
  - Documentation
  - Versioning and release process 
 

@@ -14,7 +14,9 @@ public class ExampleApplication {
         TransferwiseClient client = new TransferwiseClient(ConfigurationProvider.INSTANCE.getProduction());
 
         client.getProfiles().forEach(profile -> {
-            client.getAddresses(profile.getId()).forEach(System.out::println);
+            client.getAddresses(profile.getId()).forEach(address -> {
+                client.getAddressById(address.getId()).ifPresent(System.out::println);
+            });
         });
 
         client.getExchangeRates("EUR", "HUF").forEach(System.out::println);

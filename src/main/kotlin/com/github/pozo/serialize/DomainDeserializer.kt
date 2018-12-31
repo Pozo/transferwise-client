@@ -33,3 +33,7 @@ object ExchangeRateDeserializer : ResponseDeserializable<Array<ExchangeRate>> {
 object AddressesDeserializer : ResponseDeserializable<Array<Address>> {
     override fun deserialize(content: String): Array<Address> = Gson().fromJson(content, Array<Address>::class.java)
 }
+
+object AddressDeserializer : ResponseDeserializable<Address> {
+    override fun deserialize(content: String): Address = Gson().fromJson(content, Address::class.java)
+}

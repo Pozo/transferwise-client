@@ -58,4 +58,6 @@ class Endpoints(private val configuration: ApiConfiguration) {
 
     fun addresses(profileId: Int): String = "${configuration.getUrlWithVersion()}/addresses?profile=$profileId"
 
+    fun addressById(addressId: Int): String = "${configuration.getUrlWithVersion()}/addresses/$addressId"
+
 }
