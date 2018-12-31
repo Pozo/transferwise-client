@@ -7,6 +7,7 @@ import com.github.pozo.domain.Currency
 import com.github.pozo.domain.ExchangeRate
 import com.github.pozo.domain.Profile
 import com.github.pozo.domain.Statement
+import com.github.pozo.domain.User
 import com.google.gson.Gson
 
 
@@ -40,4 +41,8 @@ object AddressesDeserializer : ResponseDeserializable<Array<Address>> {
 
 object AddressDeserializer : ResponseDeserializable<Address> {
     override fun deserialize(content: String): Address = Gson().fromJson(content, Address::class.java)
+}
+
+object UserDeserializer : ResponseDeserializable<User> {
+    override fun deserialize(content: String): User = Gson().fromJson(content, User::class.java)
 }

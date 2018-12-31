@@ -60,7 +60,7 @@ Transfers
 Users
 
  - [ ] Get By Id
- - [ ] Get the currently logged in user
+ - [x] Get the currently logged in user
  - [ ] Sign Up with Registration Code
  
 User Profiles

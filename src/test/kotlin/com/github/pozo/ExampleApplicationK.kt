@@ -10,6 +10,7 @@ import java.time.ZonedDateTime
 fun main(args: Array<String>) {
     val client = TransferwiseClient(ConfigurationProvider.production)
 
+    client.getCurrentlyLoggedInUser()
     client.getAvailableCurrencies().forEach { println(it) }
 
     client.getExchangeRates("EUR", "HUF").forEach { println(it) }
