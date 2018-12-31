@@ -11,7 +11,9 @@ class Endpoints(private val configuration: ApiConfiguration) {
 
     val profiles = "${configuration.getUrlWithVersion()}/profiles"
 
-    val me = "${configuration.getUrlWithVersion()}/me"
+    val user = "${configuration.getUrlWithVersion()}/me"
+
+    fun userById(userId: Int) = "${configuration.getUrlWithVersion()}/users/$userId"
 
     fun profileById(profileId: Int): String = "${configuration.getUrlWithVersion()}/profiles/$profileId"
 

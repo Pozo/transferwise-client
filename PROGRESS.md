@@ -59,7 +59,7 @@ Transfers
  
 Users
 
- - [ ] Get By Id
+ - [x] Get By Id
  - [x] Get the currently logged in user
  - [ ] Sign Up with Registration Code
  

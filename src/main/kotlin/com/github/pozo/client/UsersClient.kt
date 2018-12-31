@@ -12,7 +12,7 @@ import java.util.Optional.of
 internal class UsersClient(private val apiConfiguration: ApiConfiguration) : Users {
 
     override fun getCurrentlyLoggedInUser(): Optional<User> {
-        apiConfiguration.endpoints.me.httpGet()
+        apiConfiguration.endpoints.user.httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(UserDeserializer)
             .third.fold(success = {
@@ -21,4 +21,16 @@ internal class UsersClient(private val apiConfiguration: ApiConfiguration) : Use
             return empty()
         })
     }
+
+    override fun getUserById(userId: Int): Optional<User> {
+        apiConfiguration.endpoints.userById(userId).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(UserDeserializer)
+            .third.fold(success = {
+            return of(it)
+        }, failure = {
+            return empty()
+        })
+    }
+
 }
