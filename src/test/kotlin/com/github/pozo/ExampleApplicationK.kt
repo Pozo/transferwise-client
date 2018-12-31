@@ -10,6 +10,7 @@ import java.time.ZonedDateTime
 fun main(args: Array<String>) {
     val client = TransferwiseClient(ConfigurationProvider.production)
 
+    client.getTransfers().forEach { println(it) }
     client.getCurrentlyLoggedInUser().map {
         println(client.getUserById(it.id))
     }

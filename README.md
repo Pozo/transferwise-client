@@ -17,7 +17,8 @@ First of all you have to [grab a user token](https://api-docs.transferwise.com/#
  - Error handling
  - Logging
  - Documentation
- - Versioning and release process 
+ - Versioning and release process
+ - Adjust data classes field types (right now a lot of field type is String)
 
 #### Licensing 
 
