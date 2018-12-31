@@ -11,6 +11,8 @@ class Endpoints(private val configuration: ApiConfiguration) {
 
     val profiles = "${configuration.getUrlWithVersion()}/profiles"
 
+    fun profileById(profileId: Int): String = "${configuration.getUrlWithVersion()}/profiles/$profileId"
+
     val exchangeRates = "${configuration.getUrlWithVersion()}/rates"
 
     fun exchangeRates(source: String, target: String): String {

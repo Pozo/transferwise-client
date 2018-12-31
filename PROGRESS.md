@@ -68,6 +68,6 @@ User Profiles
  - [ ] Create (Personal)
  - [ ] Create (Business)
  - [ ] Update
- - [ ] Get By Id
+ - [x] Get By Id
  - [x] List
  - [ ] Create Identification Document

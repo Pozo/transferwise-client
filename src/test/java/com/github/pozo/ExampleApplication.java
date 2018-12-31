@@ -14,6 +14,7 @@ public class ExampleApplication {
         TransferwiseClient client = new TransferwiseClient(ConfigurationProvider.INSTANCE.getProduction());
 
         client.getProfiles().forEach(profile -> {
+            client.getProfileById(profile.getId());
             client.getAddresses(profile.getId()).forEach(address -> {
                 client.getAddressById(address.getId()).ifPresent(System.out::println);
             });

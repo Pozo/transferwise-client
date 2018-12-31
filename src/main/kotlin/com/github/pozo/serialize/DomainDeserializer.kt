@@ -10,8 +10,12 @@ import com.github.pozo.domain.Statement
 import com.google.gson.Gson
 
 
-object ProfileDeserializer : ResponseDeserializable<Array<Profile>> {
+object ProfilesDeserializer : ResponseDeserializable<Array<Profile>> {
     override fun deserialize(content: String): Array<Profile> = Gson().fromJson(content, Array<Profile>::class.java)
+}
+
+object ProfileDeserializer : ResponseDeserializable<Profile> {
+    override fun deserialize(content: String): Profile = Gson().fromJson(content, Profile::class.java)
 }
 
 object BalancesDeserializer : ResponseDeserializable<Array<Balances>> {

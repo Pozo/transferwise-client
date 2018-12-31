@@ -3,7 +3,7 @@ package com.github.pozo.domain
 data class Profile(
     val id: Int,
     val type: String,
-    val profileDetails: ProfileDetails
+    val details: ProfileDetails
 )
 
 data class ProfileDetails(
