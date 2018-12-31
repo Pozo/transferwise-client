@@ -13,6 +13,10 @@ public class ExampleApplication {
     public static void main(String[] args) {
         TransferwiseClient client = new TransferwiseClient(ConfigurationProvider.INSTANCE.getProduction());
 
+        client.getTransfers().forEach(System.out::println);
+        client.getCurrentlyLoggedInUser().ifPresent(it -> {
+            System.out.println(client.getUserById(it.getId()));
+        });
         client.getProfiles().forEach(profile -> {
             client.getProfileById(profile.getId());
             client.getAddresses(profile.getId()).forEach(address -> {
