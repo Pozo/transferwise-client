@@ -1,6 +1,7 @@
 package com.github.pozo.serialize
 
 import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.github.pozo.domain.Address
 import com.github.pozo.domain.Balances
 import com.github.pozo.domain.Currency
 import com.github.pozo.domain.ExchangeRate
@@ -27,4 +28,8 @@ object CurrencyDeserializer : ResponseDeserializable<Array<Currency>> {
 
 object ExchangeRateDeserializer : ResponseDeserializable<Array<ExchangeRate>> {
     override fun deserialize(content: String): Array<ExchangeRate> = Gson().fromJson(content, Array<ExchangeRate>::class.java)
+}
+
+object AddressesDeserializer : ResponseDeserializable<Array<Address>> {
+    override fun deserialize(content: String): Array<Address> = Gson().fromJson(content, Array<Address>::class.java)
 }

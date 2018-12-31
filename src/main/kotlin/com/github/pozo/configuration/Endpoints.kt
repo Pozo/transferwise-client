@@ -56,4 +56,6 @@ class Endpoints(private val configuration: ApiConfiguration) {
                 "&intervalEnd=$formattedIntervalEnd"
     }
 
+    fun addresses(profileId: Int): String = "${configuration.getUrlWithVersion()}/addresses?profile=$profileId"
+
 }

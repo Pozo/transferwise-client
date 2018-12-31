@@ -13,6 +13,10 @@ public class ExampleApplication {
     public static void main(String[] args) {
         TransferwiseClient client = new TransferwiseClient(ConfigurationProvider.INSTANCE.getProduction());
 
+        client.getProfiles().forEach(profile -> {
+            client.getAddresses(profile.getId()).forEach(System.out::println);
+        });
+
         client.getExchangeRates("EUR", "HUF").forEach(System.out::println);
 
         client.getExchangeRates(
