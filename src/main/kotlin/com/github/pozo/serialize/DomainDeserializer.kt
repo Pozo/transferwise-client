@@ -6,6 +6,7 @@ import com.github.pozo.domain.Balances
 import com.github.pozo.domain.Currency
 import com.github.pozo.domain.ExchangeRate
 import com.github.pozo.domain.Profile
+import com.github.pozo.domain.RecipientAccount
 import com.github.pozo.domain.Statement
 import com.github.pozo.domain.Transfer
 import com.github.pozo.domain.User
@@ -50,4 +51,8 @@ object UserDeserializer : ResponseDeserializable<User> {
 
 object TransfersDeserializer : ResponseDeserializable<Array<Transfer>> {
     override fun deserialize(content: String): Array<Transfer> = Gson().fromJson(content, Array<Transfer>::class.java)
+}
+
+object RecipientAccountDeserializer : ResponseDeserializable<Array<RecipientAccount>> {
+    override fun deserialize(content: String): Array<RecipientAccount> = Gson().fromJson(content, Array<RecipientAccount>::class.java)
 }

@@ -15,6 +15,10 @@ class Endpoints(private val configuration: ApiConfiguration) {
 
     val transfers = "${configuration.getUrlWithVersion()}/transfers"
 
+    fun recipientAccounts(profileId: Int, currencyCode: String): String {
+        return "${configuration.getUrlWithVersion()}/accounts?profile=$profileId&currency=$currencyCode"
+    }
+
     fun userById(userId: Int) = "${configuration.getUrlWithVersion()}/users/$userId"
 
     fun profileById(profileId: Int): String = "${configuration.getUrlWithVersion()}/profiles/$profileId"

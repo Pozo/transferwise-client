@@ -1,0 +1,73 @@
+package com.github.pozo.domain
+
+data class RecipientAccount(
+    val id: Int,
+    val business: String,
+    val profile: String,
+    val accountHolderName: String,
+    val currency: String,
+    val country: String,
+    val type: String,
+    val details: RecipientAccountDetails,
+    val user: String,
+    val active: String
+)
+
+data class RecipientAccountDetails(
+    val address: RecipientAccountDetailsAddress,
+    val email: String,
+    val legalType: String,
+    val accountNumber: String,
+    val sortCode: String,
+    val abartn: String,
+    val accountType: String,
+    val bankgiroNumber: String,
+    val ifscCode: String,
+    val bsbCode: String,
+    val institutionNumber: String,
+    val transitNumber: String,
+    val phoneNumber: String,
+    val bankCode: String,
+    val russiaRegion: String,
+    val routingNumber: String,
+    val branchCode: String,
+    val cpf: String,
+    val cardNumber: String,
+    val idType: String,
+    val idNumber: String,
+    val idCountryIso3: String,
+    val idValidFrom: String,
+    val idValidTo: String,
+    val clabe: String,
+    val swiftCode: String,
+    val dateOfBirth: String,
+    val clearingNumber: String,
+    val bankName: String,
+    val branchName: String,
+    val businessNumber: String,
+    val province: String,
+    val city: String,
+    val rut: String,
+    val token: String,
+    val cnpj: String,
+    val payinReference: String,
+    val pspReference: String,
+    val orderId: String,
+    val idDocumentType: String,
+    val idDocumentNumber: String,
+    val targetProfile: String,
+    val taxId: String,
+    val iban: String,
+    val bic: String,
+    val IBAN: String,
+    val BIC: String
+)
+
+data class RecipientAccountDetailsAddress(
+    val country: String,
+    val countryCode: String,
+    val firstLine: String,
+    val postCode: String,
+    val city: String,
+    val state: String
+)
