@@ -54,7 +54,7 @@ Transfers
  - [ ] Get by Id
  - [ ] Get Issues
  - [ ] Get Delivery Time
- - [ ] List
+ - [x] List
  - [ ] Requirements
  
 Users
