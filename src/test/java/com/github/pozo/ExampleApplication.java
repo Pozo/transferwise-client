@@ -2,6 +2,7 @@ package com.github.pozo;
 
 import com.github.pozo.client.TransferwiseClient;
 import com.github.pozo.properties.ConfigurationProvider;
+import com.github.pozo.properties.LocalProperties;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -11,7 +12,8 @@ import java.time.ZonedDateTime;
 public class ExampleApplication {
 
     public static void main(String[] args) {
-        TransferwiseClient client = new TransferwiseClient(ConfigurationProvider.INSTANCE.getProduction());
+        String token = LocalProperties.INSTANCE.getTransferwiseApiToken();
+        TransferwiseClient client = new TransferwiseClient(ConfigurationProvider.INSTANCE.production(token));
 
         client.getTransfers().forEach(System.out::println);
         client.getCurrentlyLoggedInUser().ifPresent(it -> {

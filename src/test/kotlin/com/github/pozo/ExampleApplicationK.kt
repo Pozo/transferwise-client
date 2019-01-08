@@ -8,7 +8,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 fun main(args: Array<String>) {
-    val client = TransferwiseClient(ConfigurationProvider.production)
+    val client = TransferwiseClient(ConfigurationProvider.production())
 
     client.getProfiles().forEach {
         val accounts = client.getRecipientAccounts(it.id, "EUR")

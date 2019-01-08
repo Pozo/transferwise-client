@@ -4,15 +4,15 @@ import com.github.pozo.configuration.ApiConfiguration
 import com.github.pozo.properties.LocalProperties.getTransferwiseApiToken
 
 object ConfigurationProvider {
-    val sandbox = ApiConfiguration(
+    fun sandbox(token: String = getTransferwiseApiToken()) = ApiConfiguration(
         "https://api.sandbox.transferwise.tech",
         "v1",
-        getTransferwiseApiToken()
+        token
     )
 
-    val production = ApiConfiguration(
+    fun production(token: String = getTransferwiseApiToken()) = ApiConfiguration(
         "https://api.transferwise.com",
         "v1",
-        getTransferwiseApiToken()
+        token
     )
 }
