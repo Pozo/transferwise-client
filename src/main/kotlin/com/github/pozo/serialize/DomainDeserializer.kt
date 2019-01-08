@@ -1,8 +1,8 @@
 package com.github.pozo.serialize
 
 import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.github.pozo.domain.Account
 import com.github.pozo.domain.Address
-import com.github.pozo.domain.Balances
 import com.github.pozo.domain.Currency
 import com.github.pozo.domain.ExchangeRate
 import com.github.pozo.domain.Profile
@@ -21,8 +21,8 @@ object ProfileDeserializer : ResponseDeserializable<Profile> {
     override fun deserialize(content: String): Profile = Gson().fromJson(content, Profile::class.java)
 }
 
-object BalancesDeserializer : ResponseDeserializable<Array<Balances>> {
-    override fun deserialize(content: String): Array<Balances> = Gson().fromJson(content, Array<Balances>::class.java)
+object AccountsDeserializer : ResponseDeserializable<Array<Account>> {
+    override fun deserialize(content: String): Array<Account> = Gson().fromJson(content, Array<Account>::class.java)
 }
 
 object StatementDeserializer : ResponseDeserializable<Statement> {

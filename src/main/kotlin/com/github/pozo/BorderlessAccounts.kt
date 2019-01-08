@@ -1,15 +1,15 @@
 package com.github.pozo
 
-import com.github.pozo.domain.Balances
+import com.github.pozo.domain.Account
 import com.github.pozo.domain.Currency
 import com.github.pozo.domain.Statement
 import java.time.ZonedDateTime
-import java.util.Optional
+import java.util.*
 
 
 interface BorderlessAccounts {
 
-    fun getBalances(profileId: Int): List<Balances>
+    fun getAccounts(profileId: Int): List<Account>
 
     fun getStatement(
         borderlessAccountId: Int,

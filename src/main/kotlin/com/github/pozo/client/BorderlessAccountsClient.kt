@@ -3,10 +3,10 @@ package com.github.pozo.client
 import com.github.kittinunf.fuel.httpGet
 import com.github.pozo.BorderlessAccounts
 import com.github.pozo.configuration.ApiConfiguration
-import com.github.pozo.domain.Balances
+import com.github.pozo.domain.Account
 import com.github.pozo.domain.Currency
 import com.github.pozo.domain.Statement
-import com.github.pozo.serialize.BalancesDeserializer
+import com.github.pozo.serialize.AccountsDeserializer
 import com.github.pozo.serialize.CurrencyDeserializer
 import com.github.pozo.serialize.StatementDeserializer
 import java.time.ZonedDateTime
@@ -16,10 +16,10 @@ import java.util.Optional.of
 
 internal class BorderlessAccountsClient(private val apiConfiguration: ApiConfiguration) : BorderlessAccounts {
 
-    override fun getBalances(profileId: Int): List<Balances> {
+    override fun getAccounts(profileId: Int): List<Account> {
         apiConfiguration.endpoints.balances(profileId).httpGet()
             .header(apiConfiguration.headers.authorization())
-            .responseObject(BalancesDeserializer)
+            .responseObject(AccountsDeserializer)
             .third.fold(success = {
             return it.toList()
         }, failure = {

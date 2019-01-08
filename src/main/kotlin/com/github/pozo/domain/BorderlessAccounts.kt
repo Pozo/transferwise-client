@@ -1,6 +1,6 @@
 package com.github.pozo.domain
 
-data class Balances(
+data class Account(
     val id: Int,
     val profileId: Int,
     val recipientId: Int,
