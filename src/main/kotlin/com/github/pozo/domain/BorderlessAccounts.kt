@@ -14,7 +14,7 @@ data class Balances(
 data class Balance(
     val balanceType: String,
     val currency: String,
-    val balanceAmount: BalanceAmount,
+    val amount: BalanceAmount,
     val reservedAmount: BalanceAmount,
     val bankDetails: BankDetails
 )
