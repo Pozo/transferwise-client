@@ -30,7 +30,7 @@ internal class UsersClient(
     override fun getCurrentlyLoggedInUser(callback: (Result<User, FuelError>) -> Unit) {
         endpoints.user.httpGet()
             .header(apiConfiguration.headers.authorization())
-            .responseObject(UserDeserializer) { request, response, result ->
+            .responseObject(UserDeserializer) { _, _, result ->
                 callback(result)
             }
     }
@@ -45,7 +45,7 @@ internal class UsersClient(
     override fun getUserById(userId: Int, callback: (Result<User, FuelError>) -> Unit) {
         endpoints.userById(userId).httpGet()
             .header(apiConfiguration.headers.authorization())
-            .responseObject(UserDeserializer) { request, response, result ->
+            .responseObject(UserDeserializer) { _, _, result ->
                 callback(result)
             }
     }
