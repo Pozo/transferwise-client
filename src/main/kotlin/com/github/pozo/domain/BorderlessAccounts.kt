@@ -76,7 +76,6 @@ data class Transaction(
     val amount: BalanceAmount,
     val totalFees: BalanceAmount,
     val details: TransactionDetails,
-    val merchant: TransactionMerchant,
     val exchangeDetails: TransactionExchangeDetails,
     val runningBalance: BalanceAmount,
     val referenceNumber: String
@@ -86,7 +85,8 @@ data class TransactionDetails(
     val type: String,
     val description: String,
     val amount: BalanceAmount,
-    val category: String
+    val category: String,
+    val merchant: TransactionMerchant
 )
 
 data class TransactionMerchant(
