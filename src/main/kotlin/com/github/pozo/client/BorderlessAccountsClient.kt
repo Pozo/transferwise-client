@@ -10,14 +10,41 @@ import com.github.pozo.serialize.AccountsDeserializer
 import com.github.pozo.serialize.CurrencyDeserializer
 import com.github.pozo.serialize.StatementDeserializer
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.Optional.empty
 import java.util.Optional.of
 
-internal class BorderlessAccountsClient(private val apiConfiguration: ApiConfiguration) : BorderlessAccounts {
+internal class BorderlessAccountsClient(
+    private val apiConfiguration: ApiConfiguration,
+    private val endpoints: BorderlessAccountsEndpoints = BorderlessAccountsEndpoints(apiConfiguration)
+) : BorderlessAccounts {
+
+    internal class BorderlessAccountsEndpoints(private val configuration: ApiConfiguration) {
+
+        fun balances(profileId: Int) = "${configuration.getUrlWithVersion()}/borderless-accounts?profileId=$profileId"
+
+        fun statement(
+            borderlessAccountId: Int,
+            currency: String,
+            intervalStart: ZonedDateTime,
+            intervalEnd: ZonedDateTime
+        ): String {
+            val formattedIntervalStart = DateTimeFormatter.ofPattern(ApiConfiguration.DATE_FORMAT).format(intervalStart)
+            val formattedIntervalEnd = DateTimeFormatter.ofPattern(ApiConfiguration.DATE_FORMAT).format(intervalEnd)
+
+            return "${configuration.getUrlWithVersion()}/borderless-accounts/" +
+                    "$borderlessAccountId/statement.json" +
+                    "?currency=$currency" +
+                    "&intervalStart=$formattedIntervalStart" +
+                    "&intervalEnd=$formattedIntervalEnd"
+        }
+
+        val currencies = "${configuration.getUrlWithVersion()}/borderless-accounts/balance-currencies"
+    }
 
     override fun getAccounts(profileId: Int): List<Account> {
-        apiConfiguration.endpoints.balances(profileId).httpGet()
+        endpoints.balances(profileId).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(AccountsDeserializer)
             .third.fold(success = {
@@ -33,7 +60,7 @@ internal class BorderlessAccountsClient(private val apiConfiguration: ApiConfigu
         intervalStart: ZonedDateTime,
         intervalEnd: ZonedDateTime
     ): Optional<Statement> {
-        apiConfiguration.endpoints.statement(borderlessAccountId, currency, intervalStart, intervalEnd).httpGet()
+        endpoints.statement(borderlessAccountId, currency, intervalStart, intervalEnd).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(StatementDeserializer)
             .third.fold(success = {
@@ -44,7 +71,7 @@ internal class BorderlessAccountsClient(private val apiConfiguration: ApiConfigu
     }
 
     override fun getAvailableCurrencies(): List<Currency> {
-        apiConfiguration.endpoints.currencies.httpGet()
+        endpoints.currencies.httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(CurrencyDeserializer)
             .third.fold(success = {

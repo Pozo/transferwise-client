@@ -9,10 +9,20 @@ import java.util.*
 import java.util.Optional.empty
 import java.util.Optional.of
 
-internal class UsersClient(private val apiConfiguration: ApiConfiguration) : Users {
+internal class UsersClient(
+    private val apiConfiguration: ApiConfiguration,
+    private val endpoints: UsersClientEndpoints = UsersClientEndpoints(apiConfiguration)
+) : Users {
+
+    internal class UsersClientEndpoints(val configuration: ApiConfiguration) {
+
+        val user = "${configuration.getUrlWithVersion()}/me"
+
+        fun userById(userId: Int) = "${configuration.getUrlWithVersion()}/users/$userId"
+    }
 
     override fun getCurrentlyLoggedInUser(): Optional<User> {
-        apiConfiguration.endpoints.user.httpGet()
+        endpoints.user.httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(UserDeserializer)
             .third.fold(success = {
@@ -23,7 +33,7 @@ internal class UsersClient(private val apiConfiguration: ApiConfiguration) : Use
     }
 
     override fun getUserById(userId: Int): Optional<User> {
-        apiConfiguration.endpoints.userById(userId).httpGet()
+        endpoints.userById(userId).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(UserDeserializer)
             .third.fold(success = {

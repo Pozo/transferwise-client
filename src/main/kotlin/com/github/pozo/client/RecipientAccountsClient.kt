@@ -6,10 +6,20 @@ import com.github.pozo.configuration.ApiConfiguration
 import com.github.pozo.domain.RecipientAccount
 import com.github.pozo.serialize.RecipientAccountDeserializer
 
-internal class RecipientAccountsClient(private val apiConfiguration: ApiConfiguration) : RecipientAccounts {
+internal class RecipientAccountsClient(
+    private val apiConfiguration: ApiConfiguration,
+    private val endpoints: RecipientAccountsClientEndpoints = RecipientAccountsClientEndpoints(apiConfiguration)
+) : RecipientAccounts {
+
+    internal class RecipientAccountsClientEndpoints(val configuration: ApiConfiguration) {
+
+        fun recipientAccounts(profileId: Int, currencyCode: String): String {
+            return "${configuration.getUrlWithVersion()}/accounts?profile=$profileId&currency=$currencyCode"
+        }
+    }
 
     override fun getRecipientAccounts(profileId: Int, currencyCode: String): List<RecipientAccount> {
-        apiConfiguration.endpoints.recipientAccounts(profileId, currencyCode).httpGet()
+        endpoints.recipientAccounts(profileId, currencyCode).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(RecipientAccountDeserializer)
             .third.fold(success = {

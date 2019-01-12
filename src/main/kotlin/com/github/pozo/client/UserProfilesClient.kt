@@ -10,10 +10,20 @@ import java.util.*
 import java.util.Optional.empty
 import java.util.Optional.of
 
-internal class UserProfilesClient(private val apiConfiguration: ApiConfiguration) : UserProfiles {
+internal class UserProfilesClient(
+    private val apiConfiguration: ApiConfiguration,
+    private val endpoints: UserProfilesEndpoints = UserProfilesEndpoints(apiConfiguration)
+) : UserProfiles {
+
+    class UserProfilesEndpoints(private val configuration: ApiConfiguration) {
+
+        val profiles = "${configuration.getUrlWithVersion()}/profiles"
+
+        fun profileById(profileId: Int): String = "${configuration.getUrlWithVersion()}/profiles/$profileId"
+    }
 
     override fun getProfiles(): List<Profile> {
-        apiConfiguration.endpoints.profiles.httpGet()
+        endpoints.profiles.httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(ProfilesDeserializer)
             .third.fold(success = {
@@ -24,7 +34,7 @@ internal class UserProfilesClient(private val apiConfiguration: ApiConfiguration
     }
 
     override fun getProfileById(profileId: Int): Optional<Profile> {
-        apiConfiguration.endpoints.profileById(profileId).httpGet()
+        endpoints.profileById(profileId).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(ProfileDeserializer)
             .third.fold(success = {

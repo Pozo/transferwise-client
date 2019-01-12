@@ -10,10 +10,20 @@ import java.util.*
 import java.util.Optional.empty
 import java.util.Optional.of
 
-internal class AddressesClient(private val apiConfiguration: ApiConfiguration) : Addresses {
+internal class AddressesClient(
+    private val apiConfiguration: ApiConfiguration,
+    private val endpoints: AddressesClientEndpoints = AddressesClientEndpoints(apiConfiguration)
+) : Addresses {
+
+    internal class AddressesClientEndpoints(private val configuration: ApiConfiguration) {
+
+        fun addresses(profileId: Int): String = "${configuration.getUrlWithVersion()}/addresses?profile=$profileId"
+
+        fun addressById(addressId: Int): String = "${configuration.getUrlWithVersion()}/addresses/$addressId"
+    }
 
     override fun getAddresses(profileId: Int): List<Address> {
-        apiConfiguration.endpoints.addresses(profileId).httpGet()
+        endpoints.addresses(profileId).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(AddressesDeserializer)
             .third.fold(success = {
@@ -24,7 +34,7 @@ internal class AddressesClient(private val apiConfiguration: ApiConfiguration) :
     }
 
     override fun getAddressById(addressId: Int): Optional<Address> {
-        apiConfiguration.endpoints.addressById(addressId).httpGet()
+        endpoints.addressById(addressId).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(AddressDeserializer)
             .third.fold(success = {
