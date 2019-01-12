@@ -1,6 +1,8 @@
 package com.github.pozo.client
 
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
 import com.github.pozo.ExchangeGroup
 import com.github.pozo.ExchangeRates
 import com.github.pozo.configuration.ApiConfiguration
@@ -48,37 +50,62 @@ internal class ExchangeRatesClient(
         }
     }
 
-    override fun getExchangeRates(source: String, target: String): List<ExchangeRate> {
-        endpoints.exchangeRates(source, target).httpGet()
-            .header(apiConfiguration.headers.authorization())
-            .responseObject(ExchangeRateDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
-    }
-
-    override fun getExchangeRates(): List<ExchangeRate> {
+    override fun getExchangeRates(callback: (Result<List<ExchangeRate>, FuelError>) -> Unit) {
         endpoints.exchangeRates.httpGet()
             .header(apiConfiguration.headers.authorization())
-            .responseObject(ExchangeRateDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
+            .responseObject(ExchangeRateDeserializer) { _, _, result ->
+                callback(result)
+            }
     }
 
-    override fun getExchangeRates(source: String, target: String, time: ZonedDateTime): List<ExchangeRate> {
-        endpoints.exchangeRates(source, target, time).httpGet()
+    override fun getExchangeRates(): Result<List<ExchangeRate>, FuelError> {
+        return endpoints.exchangeRates.httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(ExchangeRateDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
+            .third
+    }
+
+    override fun getExchangeRates(source: String, target: String): Result<List<ExchangeRate>, FuelError> {
+        return endpoints.exchangeRates(source, target).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(ExchangeRateDeserializer)
+            .third
+    }
+
+    override fun getExchangeRates(
+        source: String,
+        target: String,
+        callback: (Result<List<ExchangeRate>, FuelError>) -> Unit
+    ) {
+        endpoints.exchangeRates(source, target).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(ExchangeRateDeserializer) { _, _, result ->
+                callback(result)
+            }
+    }
+
+    override fun getExchangeRates(
+        source: String,
+        target: String,
+        time: ZonedDateTime
+    ): Result<List<ExchangeRate>, FuelError> {
+        return endpoints.exchangeRates(source, target, time).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(ExchangeRateDeserializer)
+            .third
+    }
+
+    override fun getExchangeRates(
+        source: String,
+        target: String,
+        time: ZonedDateTime,
+        callback: (Result<List<ExchangeRate>, FuelError>) -> Unit
+    ) {
+        endpoints.exchangeRates(source, target, time).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(ExchangeRateDeserializer) { _, _, result ->
+                callback(result)
+            }
     }
 
     override fun getExchangeRates(
@@ -87,15 +114,27 @@ internal class ExchangeRatesClient(
         from: ZonedDateTime,
         to: ZonedDateTime,
         group: ExchangeGroup
-    ): List<ExchangeRate> {
-        endpoints.exchangeRates(source, target, from, to, group.name.toLowerCase()).httpGet()
+    ): Result<List<ExchangeRate>, FuelError> {
+        return endpoints.exchangeRates(source, target, from, to, group.name.toLowerCase()).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(ExchangeRateDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
+            .third
+    }
+
+
+    override fun getExchangeRates(
+        source: String,
+        target: String,
+        from: ZonedDateTime,
+        to: ZonedDateTime,
+        group: ExchangeGroup,
+        callback: (Result<List<ExchangeRate>, FuelError>) -> Unit
+    ) {
+        endpoints.exchangeRates(source, target, from, to, group.name.toLowerCase()).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(ExchangeRateDeserializer) { _, _, result ->
+                callback(result)
+            }
     }
 
 }

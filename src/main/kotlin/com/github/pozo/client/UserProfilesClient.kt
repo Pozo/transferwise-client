@@ -1,14 +1,13 @@
 package com.github.pozo.client
 
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
 import com.github.pozo.UserProfiles
 import com.github.pozo.configuration.ApiConfiguration
 import com.github.pozo.domain.Profile
 import com.github.pozo.serialize.ProfileDeserializer
 import com.github.pozo.serialize.ProfilesDeserializer
-import java.util.*
-import java.util.Optional.empty
-import java.util.Optional.of
 
 internal class UserProfilesClient(
     private val apiConfiguration: ApiConfiguration,
@@ -22,26 +21,34 @@ internal class UserProfilesClient(
         fun profileById(profileId: Int): String = "${configuration.getUrlWithVersion()}/profiles/$profileId"
     }
 
-    override fun getProfiles(): List<Profile> {
-        endpoints.profiles.httpGet()
+    override fun getProfiles(): Result<List<Profile>, FuelError> {
+        return endpoints.profiles.httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(ProfilesDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
+            .third
     }
 
-    override fun getProfileById(profileId: Int): Optional<Profile> {
-        endpoints.profileById(profileId).httpGet()
+    override fun getProfiles(callback: (Result<List<Profile>, FuelError>) -> Unit) {
+        endpoints.profiles.httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(ProfilesDeserializer) { _, _, result ->
+                callback(result)
+            }
+    }
+
+    override fun getProfileById(profileId: Int): Result<Profile, FuelError> {
+        return endpoints.profileById(profileId).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(ProfileDeserializer)
-            .third.fold(success = {
-            return of(it)
-        }, failure = {
-            return empty()
-        })
+            .third
+    }
+
+    override fun getProfileById(profileId: Int, callback: (Result<Profile, FuelError>) -> Unit) {
+        endpoints.profileById(profileId).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(ProfileDeserializer) { _, _, result ->
+                callback(result)
+            }
     }
 
 }

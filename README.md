@@ -13,7 +13,7 @@ First of all you have to [grab a user token](https://api-docs.transferwise.com/#
 #### TODO 
 
  - Writing tests
- - Providing async api
+ - ~~Providing async api~~
  - Error handling
  - Logging
  - Documentation

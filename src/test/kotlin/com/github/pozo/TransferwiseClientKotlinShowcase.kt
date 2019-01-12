@@ -1,5 +1,7 @@
 package com.github.pozo
 
+import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.map
 import com.github.pozo.client.TransferwiseClient
 import com.github.pozo.domain.Account
 import com.github.pozo.domain.Balance
@@ -17,36 +19,109 @@ object TransferwiseClientKotlinShowcase : DemonstrateTransferwiseClient {
     private val client = TransferwiseClient(ConfigurationProvider.production())
 
     override fun getAllProfiles() {
-        client.getProfiles().forEach { println(it) }
+        when (val profiles = client.getProfiles()) {
+            is Result.Failure -> {
+                profiles.error
+            }
+            is Result.Success -> {
+                println("Result: ${profiles.value}")
+            }
+        }
     }
 
+
     override fun getAllAccounts() {
-        client.getProfiles().forEach { profile: Profile ->
-            client.getAccounts(profile.id).forEach {
-                println(it)
+        when (val profiles = client.getProfiles()) {
+            is Result.Failure -> {
+                profiles.error
+            }
+            is Result.Success -> {
+                profiles.value.forEach { profile: Profile ->
+                    when (val accounts = client.getAccounts(profile.id)) {
+                        is Result.Failure -> {
+                            accounts.error
+                        }
+                        is Result.Success -> {
+                            println(accounts.value)
+                        }
+                    }
+                }
             }
         }
     }
 
     override fun getAllAccountsBalance() {
-        client.getProfiles().forEach { profile: Profile ->
-            client.getAccounts(profile.id).forEach { account: Account ->
-                account.balances.forEach { println(it) }
+        when (val profiles = client.getProfiles()) {
+            is Result.Failure -> {
+                profiles.error
+            }
+            is Result.Success -> {
+                profiles.value.forEach { profile: Profile ->
+                    when (val accounts = client.getAccounts(profile.id)) {
+                        is Result.Failure -> {
+                            accounts.error
+                        }
+                        is Result.Success -> {
+                            accounts.value.forEach { account: Account ->
+                                account.balances.forEach { println(it) }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun getAllAccountsBalanceAsync() {
+        when (val profiles = client.getProfiles()) {
+            is Result.Failure -> {
+                profiles.error
+            }
+            is Result.Success -> {
+                profiles.value.forEach { profile: Profile ->
+                    client.getAccounts(profile.id) { result ->
+                        when (result) {
+                            is Result.Failure -> {
+                                result.error
+                            }
+                            is Result.Success -> {
+                                result.value.forEach { account: Account ->
+                                    account.balances.forEach { println(it) }
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }
 
     override fun getAllAccountsBalanceAndItsStatementForTheLastMonth() {
-        client.getProfiles().forEach { profile: Profile ->
-            client.getAccounts(profile.id).forEach { account: Account ->
-                account.balances.forEach { balance: Balance ->
-                    client.getStatement(
-                        account.id,
-                        balance.currency,
-                        ZonedDateTime.now().minusMonths(1),
-                        ZonedDateTime.now()
-                    ).map { statement: Statement ->
-                        println(statement)
+        when (val profiles = client.getProfiles()) {
+            is Result.Failure -> {
+                profiles.error
+            }
+            is Result.Success -> {
+                profiles.value.forEach { profile: Profile ->
+                    when (val accounts = client.getAccounts(profile.id)) {
+                        is Result.Failure -> {
+                            accounts.error
+                        }
+                        is Result.Success -> {
+                            accounts.value.forEach { account: Account ->
+                                account.balances.forEach { balance: Balance ->
+                                    client.getStatement(
+                                        account.id,
+                                        balance.currency,
+                                        ZonedDateTime.now().minusMonths(1),
+                                        ZonedDateTime.now()
+                                    ).map { statement: Statement ->
+                                        println(statement)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -54,25 +129,66 @@ object TransferwiseClientKotlinShowcase : DemonstrateTransferwiseClient {
     }
 
     override fun getAllTransfers() {
-        client.getTransfers().forEach { println(it) }
+        when (val transfers = client.getTransfers()) {
+            is Result.Failure -> {
+                println(transfers.error.message)
+            }
+            is Result.Success -> {
+                println("Result: ${transfers.value}")
+            }
+        }
+    }
+
+    override fun getAllTransfersAsync() {
+        client.getTransfers { result ->
+            when (result) {
+                is Result.Failure -> {
+                    println(result.error.message)
+                }
+                is Result.Success -> {
+                    println("Result: ${result.value}")
+                }
+            }
+        }
     }
 
     override fun getAllAvailableCurrency() {
-        client.getAvailableCurrencies().forEach { println(it) }
+        when (val currencies = client.getAvailableCurrencies()) {
+            is Result.Failure -> {
+                println(currencies.error.message)
+            }
+            is Result.Success -> {
+                currencies.value.forEach { println(it) }
+            }
+        }
     }
 
     override fun getExchangeRatesForEUR_HUFPair() {
-        client.getExchangeRates("EUR", "HUF").forEach { println(it) }
+        when (val exchangeRates = client.getExchangeRates("EUR", "HUF")) {
+            is Result.Failure -> {
+                println(exchangeRates.error.message)
+            }
+            is Result.Success -> {
+                exchangeRates.value.forEach { println(it) }
+            }
+        }
     }
 
     override fun getExchangeRatesForEUR_HUFPairFrom2018OctoberTo2018December() {
-        client.getExchangeRates(
+        when (val exchangeRates = client.getExchangeRates(
             "EUR",
             "HUF",
             ZonedDateTime.of(LocalDateTime.of(2018, Month.OCTOBER, 1, 0, 0), ZoneId.systemDefault()),
             ZonedDateTime.of(LocalDateTime.of(2018, Month.DECEMBER, 30, 0, 0), ZoneId.systemDefault()),
             ExchangeGroup.DAY
-        ).forEach { println(it) }
+        )) {
+            is Result.Failure -> {
+                println(exchangeRates.error.message)
+            }
+            is Result.Success -> {
+                exchangeRates.value.forEach { println(it) }
+            }
+        }
     }
 
 }

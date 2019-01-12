@@ -8,9 +8,13 @@ interface DemonstrateTransferwiseClient {
 
     fun getAllAccountsBalance()
 
+    fun getAllAccountsBalanceAsync()
+
     fun getAllAccountsBalanceAndItsStatementForTheLastMonth()
 
     fun getAllTransfers()
+
+    fun getAllTransfersAsync()
 
     fun getAllAvailableCurrency()
 

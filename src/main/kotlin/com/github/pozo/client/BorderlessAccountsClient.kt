@@ -1,6 +1,8 @@
 package com.github.pozo.client
 
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
 import com.github.pozo.BorderlessAccounts
 import com.github.pozo.configuration.ApiConfiguration
 import com.github.pozo.domain.Account
@@ -11,9 +13,6 @@ import com.github.pozo.serialize.CurrencyDeserializer
 import com.github.pozo.serialize.StatementDeserializer
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
-import java.util.Optional.empty
-import java.util.Optional.of
 
 internal class BorderlessAccountsClient(
     private val apiConfiguration: ApiConfiguration,
@@ -43,15 +42,19 @@ internal class BorderlessAccountsClient(
         val currencies = "${configuration.getUrlWithVersion()}/borderless-accounts/balance-currencies"
     }
 
-    override fun getAccounts(profileId: Int): List<Account> {
-        endpoints.balances(profileId).httpGet()
+    override fun getAccounts(profileId: Int): Result<List<Account>, FuelError> {
+        return endpoints.balances(profileId).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(AccountsDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
+            .third
+    }
+
+    override fun getAccounts(profileId: Int, callback: (Result<List<Account>, FuelError>) -> Unit) {
+        endpoints.balances(profileId).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(AccountsDeserializer) { _, _, result ->
+                callback(result)
+            }
     }
 
     override fun getStatement(
@@ -59,25 +62,39 @@ internal class BorderlessAccountsClient(
         currency: String,
         intervalStart: ZonedDateTime,
         intervalEnd: ZonedDateTime
-    ): Optional<Statement> {
-        endpoints.statement(borderlessAccountId, currency, intervalStart, intervalEnd).httpGet()
+    ): Result<Statement, FuelError> {
+        return endpoints.statement(borderlessAccountId, currency, intervalStart, intervalEnd).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(StatementDeserializer)
-            .third.fold(success = {
-            return of(it)
-        }, failure = {
-            return empty()
-        })
+            .third
     }
 
-    override fun getAvailableCurrencies(): List<Currency> {
-        endpoints.currencies.httpGet()
+    override fun getStatement(
+        borderlessAccountId: Int,
+        currency: String,
+        intervalStart: ZonedDateTime,
+        intervalEnd: ZonedDateTime,
+        callback: (Result<Statement, FuelError>) -> Unit
+    ) {
+        endpoints.statement(borderlessAccountId, currency, intervalStart, intervalEnd).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(StatementDeserializer) { _, _, result ->
+                callback(result)
+            }
+    }
+
+    override fun getAvailableCurrencies(): Result<List<Currency>, FuelError> {
+        return endpoints.currencies.httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(CurrencyDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
+            .third
+    }
+
+    override fun getAvailableCurrencies(callback: (Result<List<Currency>, FuelError>) -> Unit) {
+        endpoints.currencies.httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(CurrencyDeserializer) { _, _, result ->
+                callback(result)
+            }
     }
 }

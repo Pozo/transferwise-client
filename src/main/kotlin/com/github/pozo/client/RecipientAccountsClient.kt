@@ -1,6 +1,8 @@
 package com.github.pozo.client
 
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
 import com.github.pozo.RecipientAccounts
 import com.github.pozo.configuration.ApiConfiguration
 import com.github.pozo.domain.RecipientAccount
@@ -18,14 +20,22 @@ internal class RecipientAccountsClient(
         }
     }
 
-    override fun getRecipientAccounts(profileId: Int, currencyCode: String): List<RecipientAccount> {
-        endpoints.recipientAccounts(profileId, currencyCode).httpGet()
+    override fun getRecipientAccounts(profileId: Int, currencyCode: String): Result<List<RecipientAccount>, FuelError> {
+        return endpoints.recipientAccounts(profileId, currencyCode).httpGet()
             .header(apiConfiguration.headers.authorization())
             .responseObject(RecipientAccountDeserializer)
-            .third.fold(success = {
-            return it.toList()
-        }, failure = {
-            return listOf()
-        })
+            .third
+    }
+
+    override fun getRecipientAccounts(
+        profileId: Int,
+        currencyCode: String,
+        callback: (Result<List<RecipientAccount>, FuelError>) -> Unit
+    ) {
+        endpoints.recipientAccounts(profileId, currencyCode).httpGet()
+            .header(apiConfiguration.headers.authorization())
+            .responseObject(RecipientAccountDeserializer) { _, _, result ->
+                callback(result)
+            }
     }
 }

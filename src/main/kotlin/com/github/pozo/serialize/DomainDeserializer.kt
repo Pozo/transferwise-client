@@ -11,36 +11,39 @@ import com.github.pozo.domain.Statement
 import com.github.pozo.domain.Transfer
 import com.github.pozo.domain.User
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 val gson = Gson()
 
-object ProfilesDeserializer : ResponseDeserializable<Array<Profile>> {
-    override fun deserialize(content: String): Array<Profile> = gson.fromJson(content, Array<Profile>::class.java)
+inline fun <reified T> genericType() = object : TypeToken<T>() {}.type
+
+object ProfilesDeserializer : ResponseDeserializable<List<Profile>> {
+    override fun deserialize(content: String): List<Profile> = gson.fromJson(content, genericType<List<Profile>>())
 }
 
 object ProfileDeserializer : ResponseDeserializable<Profile> {
     override fun deserialize(content: String): Profile = gson.fromJson(content, Profile::class.java)
 }
 
-object AccountsDeserializer : ResponseDeserializable<Array<Account>> {
-    override fun deserialize(content: String): Array<Account> = gson.fromJson(content, Array<Account>::class.java)
+object AccountsDeserializer : ResponseDeserializable<List<Account>> {
+    override fun deserialize(content: String): List<Account> = gson.fromJson(content, genericType<List<Account>>())
 }
 
 object StatementDeserializer : ResponseDeserializable<Statement> {
     override fun deserialize(content: String): Statement = gson.fromJson(content, Statement::class.java)
 }
 
-object CurrencyDeserializer : ResponseDeserializable<Array<Currency>> {
-    override fun deserialize(content: String): Array<Currency> = gson.fromJson(content, Array<Currency>::class.java)
+object CurrencyDeserializer : ResponseDeserializable<List<Currency>> {
+    override fun deserialize(content: String): List<Currency> = gson.fromJson(content, genericType<List<Currency>>())
 }
 
-object ExchangeRateDeserializer : ResponseDeserializable<Array<ExchangeRate>> {
-    override fun deserialize(content: String): Array<ExchangeRate> =
-        gson.fromJson(content, Array<ExchangeRate>::class.java)
+object ExchangeRateDeserializer : ResponseDeserializable<List<ExchangeRate>> {
+    override fun deserialize(content: String): List<ExchangeRate> =
+        gson.fromJson(content, genericType<List<ExchangeRate>>())
 }
 
-object AddressesDeserializer : ResponseDeserializable<Array<Address>> {
-    override fun deserialize(content: String): Array<Address> = gson.fromJson(content, Array<Address>::class.java)
+object AddressesDeserializer : ResponseDeserializable<List<Address>> {
+    override fun deserialize(content: String): List<Address> = gson.fromJson(content, genericType<List<Address>>())
 }
 
 object AddressDeserializer : ResponseDeserializable<Address> {
@@ -51,11 +54,11 @@ object UserDeserializer : ResponseDeserializable<User> {
     override fun deserialize(content: String): User = gson.fromJson(content, User::class.java)
 }
 
-object TransfersDeserializer : ResponseDeserializable<Array<Transfer>> {
-    override fun deserialize(content: String): Array<Transfer> = gson.fromJson(content, Array<Transfer>::class.java)
+object TransfersDeserializer : ResponseDeserializable<List<Transfer>> {
+    override fun deserialize(content: String): List<Transfer> = gson.fromJson(content, genericType<List<Transfer>>())
 }
 
-object RecipientAccountDeserializer : ResponseDeserializable<Array<RecipientAccount>> {
-    override fun deserialize(content: String): Array<RecipientAccount> =
-        gson.fromJson(content, Array<RecipientAccount>::class.java)
+object RecipientAccountDeserializer : ResponseDeserializable<List<RecipientAccount>> {
+    override fun deserialize(content: String): List<RecipientAccount> =
+        gson.fromJson(content, genericType<List<RecipientAccount>>())
 }
